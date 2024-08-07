@@ -4,6 +4,7 @@ import withRouter from "../../withRouter";
 import { Container,Row,Col,Card,Button } from "react-bootstrap";
 import RestClient from "../../RestAPI/RestClient";
 import AppUrl from "../../RestAPI/AppUrl";
+import cartWrapper from "../../cartWrapper";
 
 export class Home extends Component { 
 
@@ -13,10 +14,7 @@ export class Home extends Component {
         this.state = {
             isLoading : false,
             products : [],
-
         }
-
-        
     }
 
     componentDidMount()
@@ -26,14 +24,14 @@ export class Home extends Component {
 
     getProducts = ()=>{
         RestClient.getRequest(AppUrl.home).then((res)=>{
-         
-
+                
             if (res.status===200){
                 this.setState({
                     isLoading : false,
                     products : res.data
                 })
             }
+
 
         }).catch((err)=>{
             console.log(err);
@@ -43,8 +41,54 @@ export class Home extends Component {
         })
     }
 
+    addQuantity = (id,value)=>{
+        const {products} = this.state;
+
+        let newProducts = products.map((item,index)=>{
+           return (item.prd_id===id) ? {...item,addQuantity : parseInt(value)} : item
+        });
+        
+        // TODO NEW PRODUCT GELMİYOR
+
+        //console.log(newProducts); 
+
+        this.setState({
+            products : newProducts
+        })
+    }
+
+    addCart = (id) => {
+
+        const {products} = this.state;
+        const {cart} = this.props;
+        let newProducts = products.map((item,index) => {
+           if(item.prd_id === id){
+            cart.addItem({
+                id: item.prd_id,
+                name : item.prd_name,
+                price: item.prd_price
+            },item.addQuantity);
+
+            delete item.addQuantity;
+
+           }
+
+           return item;
+        });
+
+        this.setState({
+            products : newProducts
+        });
+    }
+
     productRender = (products) => {
-        return products.map((item,index) => {
+        const {cart} = this.props;
+
+        if(!products || !products[0]?.data){
+            return;
+        }
+
+        return products[0].data.map((item,index) => {
             return (
                 <Col key={index} md={4} className={"mt-5"}>
                     <Card>
@@ -52,14 +96,17 @@ export class Home extends Component {
                     <Card.Title><b>{item.prd_name}</b></Card.Title>
                     <Card.Text>
                         <b>Fiyat</b> : <b>{item.prd_price}</b> ₺
-                    </Card.Text>
-                    <Button variant="success">Sepete Ekle</Button>
+                    </Card.Text> 
+                    <input className={"form-control"} value={(item.addQuantity) ? item.addQuantity : ''} onChange={(event)=>this.addQuantity(item.prd_id,event.target.value)} type={"number"}/>
+                    <Button className={"mt-3"} onClick={() => this.addCart(item.prd_id)} variant="success">Sepete Ekle</Button>
+                    
                     </Card.Body>
                     </Card>
                 </Col>
             );
                
         });
+        
     }   
 
 
@@ -71,7 +118,7 @@ export class Home extends Component {
         if(isLoading){ 
             return (
                 <div className={"d-flex justify-content-center align-items-center vh-100"}>
-                    Yükleniyor.
+                   Veriler Yükleniyor.
                 </div>
             )
         }
@@ -80,9 +127,9 @@ export class Home extends Component {
             <>
             <Header/>
             <Container className={"mt-5"}>
-                <h3 className={"d-flex justify-content-center align-self-center"}>-Ürün Listesi-</h3>
+                <h3 className={"d-flex justify-content-center align-self-center"}>Ürün Listesi</h3>
                 <Row className={"mt-5"}>
-                        {(products.length===0) ? (<div className={"col-md-12 alert alert-danger text-center"}>Ürün Bulunamadı.</div>) : this.productRender(products)}
+                {this.productRender(products)}
                 </Row>
             </Container>
             </>
@@ -90,4 +137,4 @@ export class Home extends Component {
     }
 }
 
-export default withRouter(Home);
+export default withRouter(cartWrapper(Home));
