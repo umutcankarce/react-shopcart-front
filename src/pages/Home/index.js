@@ -5,6 +5,8 @@ import { Container,Row,Col,Card,Button } from "react-bootstrap";
 import RestClient from "../../RestAPI/RestClient";
 import AppUrl from "../../RestAPI/AppUrl";
 import cartWrapper from "../../cartWrapper";
+import { Helmet } from "react-helmet";
+import { CircleSpinner } from "react-spinners-kit";
 
 export class Home extends Component { 
 
@@ -114,13 +116,17 @@ export class Home extends Component {
         if(isLoading){ 
             return (
                 <div className={"d-flex justify-content-center align-items-center vh-100"}>
-                   Veriler Yükleniyor.
+                  <CircleSpinner size={30} color="#686769" loading={isLoading} />
                 </div>
             )
         }
         
         return (
             <>
+             <Helmet>
+                <meta charSet="utf-8" />
+                <title>Anasayfa - iCart</title>
+            </Helmet>
             <Header/>
             <Container className={"mt-5"}>
                 <h3 className={"d-flex justify-content-center align-self-center"}>Ürün Listesi</h3>

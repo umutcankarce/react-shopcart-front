@@ -4,7 +4,7 @@ import withRouter from "../../withRouter";
 import { Container,Row,Col,Table,Button,Card,Badge } from "react-bootstrap";
 import cartWrapper from "../../cartWrapper";
 import {Link} from "react-router-dom";
-
+import { Helmet } from "react-helmet";
 const KDV = 20;
 export class Cart extends Component { 
 
@@ -46,6 +46,11 @@ export class Cart extends Component {
 
         return (
             <>
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Sepetim - iCart</title>
+            </Helmet>
+
             <Header/>
             <Container className={"mt-5"}>
             <h3 className={"mt-5 d-flex justify-content-center"}>Sepetim ({totalUniqueItems})</h3>

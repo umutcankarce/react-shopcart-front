@@ -6,6 +6,8 @@ import Notification from "../../RestAPI/Notification";
 import AppUrl from "../../RestAPI/AppUrl";
 import RestClient from "../../RestAPI/RestClient";
 import parse from "html-react-parser";
+import { Helmet } from "react-helmet";
+import { CircleSpinner } from "react-spinners-kit";
 
 export class Payment extends Component { 
 
@@ -71,13 +73,17 @@ export class Payment extends Component {
         if(isLoading) { 
             return (
                 <div className={"d-flex justify-content-center align-content-center vh-100"}>
-                    Yükleniyor.
+                     <CircleSpinner size={30} color="#686769" loading={isLoading} />
                 </div>
             )
         } 
 
         return (
             <>
+             <Helmet>
+                <meta charSet="utf-8" />
+                <title>Ödeme - iCart</title>
+            </Helmet>
             <Header/>
                 {(paymentForm !== '') ? (
                     parse(paymentForm)
