@@ -25,6 +25,19 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <style>
+      #paytriframe{
+        height: 700px !important;
+        margin-top: 5rem !important;
+        margin-bottom: 5rem !important;
+      }
+
+      @media (max-width: 961px) {
+        #paytriframe{
+          height: 1200px !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -39,5 +52,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>iFrameResize({},'#paytriframe');</script>
   </body>
 </html>
