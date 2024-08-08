@@ -47,11 +47,7 @@ export class Home extends Component {
         let newProducts = products.map((item,index)=>{
            return (item.prd_id===id) ? {...item,addQuantity : parseInt(value)} : item
         });
-
-        // TODO NEW PRODUCT GELMİYOR
-
-        console.log(newProducts); 
-
+        
         this.setState({
             products : newProducts
         })
